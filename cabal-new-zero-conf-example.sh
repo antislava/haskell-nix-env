@@ -1,6 +1,6 @@
 nix-shell -p "let nxpkgs = import <unstable> {}; in nxpkgs.haskell.packages.ghc861.ghcWithPackages (pkgs: with pkgs; [])"
 
-# NOTE: Cabal resolver uses an insane amount of memory (which apparently grows exponentially with the number of dependencies) and crashes. (16gb RAM and quitting all other application helps! ;-) )
+# NOTE: Cabal resolver uses the insane amount of memory (which apparently grows exponentially with the number of dependencies) and crashes. (16gb RAM and quitting all other application helps! ;-) )
 cabal new-repl all \
   --build-depends bytestring \
   --build-depends text \
@@ -28,5 +28,5 @@ cabal new-repl all \
   --build-depends system-filepath \
   --build-depends system-fileio \
 
-# Didn't manage to add the next dependency even incrementally
+# Didn't manage to add the next dependency :(
 #   --build-depends neat-interpolation

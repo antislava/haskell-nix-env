@@ -97,7 +97,7 @@ let
   ghcWithDeps = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps: with ps;
     pkgs.stdenv.lib.lists.subtractLists
       target-names # all target packages subtracted
-      ( [ ] # possible extras outside target cabals (for scripting etc)
+      ( [ ] # possible extras packages (for testing in ghci)
       ++ [ ghcid fast-tags ] # shell tools
       ++ pkgs.lib.concatMap (getHaskellDeps gatherDepsAll ps) target-paths
       )
@@ -108,7 +108,7 @@ let
     pkgs.stdenv.lib.lists.subtractLists
       target-names # all target packages subtracted
       ( [ # adding back implicit ghc dependencies (for tagging and browsing)
-          # + possible extras outside target cabals (to be tag-indexed)
+          # + possible extras packages (to be tagging and browsing)
           base_4_12_0_0
           bytestring_0_10_8_2 text_1_2_3_1
           time_1_9_2
@@ -146,7 +146,7 @@ in
     # inherit ghcWithDeps;
     # inherit ghcWithDepsTags;
 
-    # Test shells used for developing dep sets (incrementing overriding)
+    # Example test shell for the incremental development of the dependency overrides (compatibilitiy testing)
     shell-test = ghcWithPackages (ps: with ps; [
       semigroupoids patience polyparse vector-binary-instances
       haskell-src-exts criterion monad-par
