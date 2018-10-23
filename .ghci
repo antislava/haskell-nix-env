@@ -1,0 +1,28 @@
+:set prompt "> "
+
+:set -Werror=incomplete-patterns
+:set -Wall
+
+:set -XCPP
+:set -XDataKinds
+:set -XDeriveDataTypeable
+:set -XDeriveGeneric
+:set -XDuplicateRecordFields
+:set -XEmptyDataDecls
+:set -XFlexibleInstances
+:set -XKindSignatures
+:set -XLambdaCase
+-- :set -XNoImplicitPrelude
+:set -XOverloadedStrings
+:set -XPartialTypeSignatures
+:set -XPatternGuards
+:set -XPolyKinds
+:set -XQuasiQuotes
+:set -XRecordWildCards
+:set -XScopedTypeVariables
+:set -XTemplateHaskell
+:set -XTypeApplications
+:set -XTypeFamilies
+:set -XTypeOperators
+:set -XUnicodeSyntax
+:set -XViewPattern

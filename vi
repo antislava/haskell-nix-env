@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# echo "$@"
+vim -c 'source ./haskell.vim' $@
