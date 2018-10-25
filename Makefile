@@ -58,6 +58,7 @@ nix-shell-check : default-flex.nix nix/* hask-deps/*
 
 # make -B nix/nixpkgs.git.json to force update
 $(NIXPKGS) :
+	# Switch between the original nixpkgs at github or a local mirror/fork:
 	# nix-prefetch-git https://github.com/NixOS/nixpkgs > $(NIXPKGS)
 	cd /r-cache/git/github.com/NixOS/nixpkgs && \
 		git fetch

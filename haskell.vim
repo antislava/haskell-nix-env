@@ -16,17 +16,20 @@ function! Hpack()
   if v:shell_error
     echo err
   else
-    " let err2 = system('cabal2nix . > `basename $(pwd)`.nix')
-    " let err2 = system('cabal2nix $(pwd %) > `basename $(pwd)`.nix')
-    " let err2 = system('p=`pwd %` && touch $p/`basename $p`.nix')
-    " let err2 = system('p=`dirname % '.expand('%').'` && touch $p/asdf.asdf')
-    " let err2 = system('p=`dirname % '.expand('%').'` && cabal2nix $p > `basename $p`.nix')
-    let err2 = system('p=`dirname '.expand('%').'` && n=`basename $p` && cabal2nix $p > ./$n.nix')
-    " let err2 = system('p=`dirname '.expand('%').'` && n=$(basename $p) && echo $p $n > ./asdf.nix')
+    " If 'name: ' field in package.yaml is absent, use dirname!
+    " Stripping the trailing newline is a bit tricky:
+    let pname = system('echo -n `sed -rn "s|^name: (.*)$|\1|p;" '.expand('%').' | xargs`')
+    " echom pname
+    " let dname = system('basename `dirname '.expand('%:p').'`')
+    let dname = expand('%:p:h:t')
+    if pname ==? ""
+    " if 1
+      let name = dname
+    else
+      let name = pname
+    endif
+    let err2 = system('p=`dirname '.expand('%').'` && n=`basename $p` && touch '.shellescape(name).'.nix')
 
-    " If there is a nix folder put the nix file there, otherwise in root
-    " NOooo! - it is too tricky (the nix will need to point sources in the parent) - going back to same dir
-    " let err2 = system('cabal2nix . > `find . -maxdepth 1 -type d -name nix -exec echo {}/ \;``basename $(pwd)`.nix')
     if v:shell_error
       echo err2
     endif
@@ -39,4 +42,3 @@ endfunction
 "   system('readlink -f ' . expand(%) . ' | xclip -selection clipboard')
 " endfunction
 " nmap <silent> <leader>rl <ESC>:Readlink<CR><CR>
-

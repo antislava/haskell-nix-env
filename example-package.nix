@@ -8,7 +8,7 @@
 mkDerivation {
   pname = "example-package";
   version = "0.0.1";
-  src = ../example-package;
+  src = /home/slava/repos/hask/example-package;
   isLibrary = false;
   isExecutable = true;
   libraryToolDepends = [ hpack ];
