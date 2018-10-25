@@ -28,7 +28,7 @@ function! Hpack()
     else
       let name = pname
     endif
-    let err2 = system('p=`dirname '.expand('%').'` && n=`basename $p` && touch '.shellescape(name).'.nix')
+    let err2 = system('p=`dirname '.expand('%').'` && n=`basename $p` && cabal2nix $p > '.shellescape(name).'.nix')
 
     if v:shell_error
       echo err2
