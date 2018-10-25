@@ -53,4 +53,6 @@ nix-shell -p "let nxpkgs = import <unstable> {}; in nxpkgs.haskell.packages.ghc8
 cabal new-repl --build-depends lens
 ```
 
-Unfortunately, this native cabal resolver uses a copious amount of memory, apparently growing exponentially with the number of dependencies. This makes it practically unusable for even a moderate package. Did not manage to start repl for the example application package used here (though got pretty close with 16g RAM and switching all other applications, see [cabal-new-zero-conf-example.sh](./cabal-new-zero-conf-example.sh)). For now, this option seems limited to only quick initial idea testing and prototyping.
+Unfortunately, this native cabal resolver uses a copious amount of memory, apparently growing exponentially with the number of dependencies. This makes it practically unusable for even a moderate package. Did not manage to start repl for the example application package used here (though got pretty close with 16GB RAM and quitting all other applications, see notes in [cabal-new-zero-conf-example.sh](./cabal-new-zero-conf-example.sh)). For now, this option seems limited to only quick initial idea testing and prototyping.
+
+**Last but not least**, cabal solver generated a 2.5GB plan cache within local dist-newstyle (which is obviously not shared with other projects the way `nix` and `stack` resources are).

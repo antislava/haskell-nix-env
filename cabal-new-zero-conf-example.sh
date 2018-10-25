@@ -1,6 +1,19 @@
 nix-shell -p "let nxpkgs = import <unstable> {}; in nxpkgs.haskell.packages.ghc861.ghcWithPackages (pkgs: with pkgs; [])"
 
-# NOTE: Cabal resolver uses the insane amount of memory (which apparently grows exponentially with the number of dependencies) and crashes. (16gb RAM and quitting all other application helps! ;-) )
+# Small example works just fine!
+cabal new-repl all \
+  --build-depends singletons \
+  --build-depends QuickCheck \
+  --build-depends containers \
+  --build-depends template-haskell \
+  --build-depends th-lift-instances \
+  --build-depends parsec \
+  --build-depends HUnit \
+  --build-depends dlist
+
+
+# Somewhat bigger set (example project):
+# Cabal solver uses the insane amount of memory (which apparently grows exponentially with the number of dependencies) and crashes. (16GB RAM and quitting all other application helps.) Also, the solver created a 2.5GB cache folder inside the dist-newstyle(!)
 cabal new-repl all \
   --build-depends bytestring \
   --build-depends text \

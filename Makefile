@@ -93,6 +93,7 @@ clean-all : clean-tmp clean-tags clean-build
 .PHONY: clean-build
 clean-build :
 	cabal new-clean
+	rm -r dist
 
 .PHONY: clean-tags
 clean-tags :
@@ -101,4 +102,4 @@ clean-tags :
 
 .PHONY: clean-tmp
 clean-tmp :
-	rm -f  .ghc.environment.x86_64-linux-*
+	rm -f  .ghc.environment.*
