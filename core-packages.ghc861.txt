@@ -1,0 +1,32 @@
+array
+base
+binary
+bytestring
+Cabal
+containers
+deepseq
+directory
+filepath
+ghc-boot
+ghc-boot-th
+ghc-compact
+# ghc-heap
+ghc-prim
+# ghci
+haskeline
+hpc
+integer-gmp
+# libiserv
+mtl
+parsec
+pretty
+process
+rts
+stm
+template-haskell
+terminfo
+text
+time
+transformers
+unix
+xhtml
