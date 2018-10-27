@@ -1,4 +1,7 @@
-{ compiler ? "ghc861" }:
+{ compiler ? "ghc861"
+, withHoogle ? true
+}:
+
 # USAGE: nix-shell default-flex.nix -A shell --argstr compiler "ghc843"
 let
   fetchNixpkgs            = import ./nix-utils/fetchNixpkgs.nix;
@@ -93,8 +96,11 @@ let
     libraryHaskellDepends ++ executableHaskellDepends ++ testHaskellDepends;
 
   # ghc environment for the development nix shell
-  # ghcWithDeps = pkgs.haskell.packages.${compiler}.ghcWithHoogle (ps: with ps; # Hoogle didn't compile with 8.6.1 yet
-  ghcWithDeps = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps: with ps;
+  ghcWithDepsFunc = if withHoogle
+    then pkgs.haskell.packages.${compiler}.ghcWithHoogle
+    else pkgs.haskell.packages.${compiler}.ghcWithPackages;
+
+  ghcWithDeps = ghcWithDepsFunc (ps: with ps;
     pkgs.stdenv.lib.lists.subtractLists
       target-names # all target packages subtracted
       ( [ ] # possible extras packages (for testing in ghci)
@@ -107,16 +113,13 @@ let
   ghcWithDepsTags = pkgs.haskell.packages.${compiler}.ghcWithPackages (ps: with ps;
     pkgs.stdenv.lib.lists.subtractLists
       target-names # all target packages subtracted
-      ( [ # adding back implicit ghc dependencies (for tagging and browsing)
-          # + possible extras packages (to be tagging and browsing)
-          base_4_12_0_0
-          bytestring_0_10_8_2 text_1_2_3_1
-          time_1_9_2
+      ( [ # possible extra packages (to be indexed for tagging/browsing)
         ]
       ++ pkgs.lib.concatMap (getHaskellDeps gatherDepsCore ps) target-paths
       )
     );
   src-paths = builtins.filter (builtins.hasAttr "pname") ghcWithDepsTags.paths;
+  src-paths-core = builtins.filter (p: !(builtins.hasAttr "pname" p)) ghcWithDepsTags.paths;
   package-srcs =
     # map (p: {src = p.src.outPath; nm = p.name;}) ghcpkgs.paths
     map (p: {src = "${unpack p pkgs}"; nm = p.name;}) src-paths;
@@ -140,11 +143,23 @@ in
  export GHC_VER=${compiler} # Used by package source extraction build
  echo ${ghcWithDeps}
 '';};
-    # # Used for inspecting in nix-repl:
-    # inherit pkgs;
-    # inherit package-srcs;
-    # inherit ghcWithDeps;
-    # inherit ghcWithDepsTags;
+    tagshell = pkgs.stdenv.mkDerivation {
+      name = "weba-table-servant-env";
+      buildInputs = [ ghcWithDepsTags ];
+      shellHook = ''
+ export LANG=en_US.UTF-8
+ eval $(egrep ^export ${ghcWithDeps}/bin/ghc)
+ # export WDATA="/DATA"     # Various project env vars
+ export GHC_VER=${compiler} # Used by package source extraction build
+ echo ${ghcWithDeps}
+'';};
+    # Used for inspecting in nix-repl:
+    inherit pkgs;
+    inherit src-paths;
+    inherit src-paths-core;
+    inherit package-srcs;
+    inherit ghcWithDeps;
+    inherit ghcWithDepsTags;
 
     # Example test shell for the incremental development of the dependency overrides (compatibilitiy testing)
     shell-test = ghcWithPackages (ps: with ps; [

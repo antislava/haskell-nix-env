@@ -34,7 +34,8 @@ default:
 shell84 : nix-shell-check
 ifndef NIX_GHC
 	@touch nix-shell-check
-	nix-shell default-flex.nix -A shell --argstr compiler ghc843 --command "ghc-pkg list --simple-output | tr ' ' '\n' > ghc-pkg-list_ghc843.txt; return"
+	ln -sf `ghc-pkg list | head -1 | xargs` .
+	nix-shell default-flex.nix -A shell --argstr compiler ghc843 --command "ghc-pkg list | head -1 | xargs | xargs -I {} ln -sf {} . ; ls -1 package.conf.d | sort > package.conf.d.ghc843.txt; return"
 else
 	$(error Already in GHC shell!)
 endif
@@ -43,7 +44,7 @@ endif
 shell86 : nix-shell-check
 ifndef NIX_GHC
 	@touch nix-shell-check
-	nix-shell default-flex.nix -A shell --argstr compiler ghc861 --command "ghc-pkg list --simple-output | tr ' ' '\n' > ghc-pkg-list_ghc861.txt; return"
+	nix-shell default-flex.nix -A shell --argstr compiler ghc861 --command "ghc-pkg list | head -1 | xargs | xargs -I {} ln -sf {} . ; ls -1 package.conf.d | sort > package.conf.d.ghc861.txt; return"
 else
 	$(error Already in GHC shell!)
 endif
@@ -69,8 +70,8 @@ $(NIXPKGS) :
 
 .FORCE:
 
-# hasktags seems to have big problems because of lazy IO. Switched to fast-tags
-tags : .FORCE haskdeps
+# hasktags seems to have problems because of lazy IO. Switched to fast-tags
+tags : .FORCE haskdeps haskdeps-core
 ifdef FAST_TAGS_VER
 	fast-tags -RL . -o tags
 else
@@ -80,6 +81,15 @@ endif
 haskdeps :
 ifdef NIX_GHC
 	nix-build default-flex.nix -A haskell-sources --argstr compiler $(GHC_VER) -o haskdeps
+else
+	$(error Not in GHC shell!)
+endif
+
+haskdeps-core :
+ifdef NIX_GHC
+	rm -rf haskdeps-core
+	mkdir  haskdeps-core
+	grep -v "^#" core-packages.$(GHC_VER).txt | xargs -I P grep "^P-[0-9]" package.conf.d.$(GHC_VER).txt | sed -r "s|\.conf||" | xargs -I P sh -c 'cabal get P -d /cabal-cache; ln -s /cabal-cache/P ./haskdeps-core'
 else
 	$(error Not in GHC shell!)
 endif
@@ -99,6 +109,7 @@ clean-build :
 clean-tags :
 	rm -f  tags
 	rm -f  haskdeps
+	rm -rf haskdeps-core
 
 .PHONY: clean-tmp
 clean-tmp :

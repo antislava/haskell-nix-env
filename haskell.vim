@@ -2,7 +2,7 @@
 " Additional tmux/slime shortcuts. HASKELL-specific
 "
 " """""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <silent> <leader>rr <ESC>:call Send_to_Tmux(":l ". expand('%') . "\n")<CR>
+nmap <silent> <leader>rr <ESC>:w <CR> :call Send_to_Tmux(":l ". expand('%') . "\n")<CR>
 
 
 " """""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -42,3 +42,4 @@ endfunction
 "   system('readlink -f ' . expand(%) . ' | xclip -selection clipboard')
 " endfunction
 " nmap <silent> <leader>rl <ESC>:Readlink<CR><CR>
+
