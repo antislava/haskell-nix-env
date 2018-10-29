@@ -1,5 +1,7 @@
 # Haskell nix development environment
 
+**TODO: README needs updating after refactoring (2018-10-29)**
+
 Simple haskell development environment based on `nix` and `make`.
 To be used primarily for the incremental development using cabal new-[build/repl] and `ghcid`, etc.
 
