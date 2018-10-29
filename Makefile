@@ -3,7 +3,8 @@ FAST_TAGS_VER := $(shell fast-tags --version 2>/dev/null)
 DIR = .
 NIX-DIR = ./nix
 NIXPKGS = $(NIX-DIR)/nixpkgs.git.json
-TARGETS = "[./example-package.nix]"
+# TARGETS = "[ ./example-package.nix ]"
+TARGETS = "[ ]"
 
 # DEFAULT
 .PHONY : default
@@ -50,8 +51,8 @@ else
 endif
 
 # .PHONY : nix-shell-check
-# nix-shell-check : project.nix $(PKG-NIX) nix/* hask-deps/*
-nix-shell-check : project.nix nix/* hask-deps/*
+# nix-shell-check : project.nix $(PKG-NIX) nix/* nix-deps/*
+nix-shell-check : project.nix nix/* nix-deps/*
 	@echo "Some nix shell dependencies changed!"
 
 

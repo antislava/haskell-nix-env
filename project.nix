@@ -1,8 +1,12 @@
-{ compiler ? "ghc861"
+{ compiler   ? "ghc861"
+, targets  # ? [] Having default is somewhat error-prone
 , withHoogle ? true
-, targets # ? [] Somewhat error-prone
+, tools      ? ps: [ ps.ghcid ps.fast-tags ps.hlint ]
 }:
-# USAGE: nix-shell project.nix --arg targets [./example-package.nix] --argstr compiler ghc843 -A shell
+# USAGE:
+# nix-shell project.nix --arg targets "[ ./example-package.nix ]" --argstr compiler ghc843 -A shell
+# nix-shell project.nix --arg targets [ ] --arg withHoogle false -A shell
+# nix-shell project.nix --arg targets "[ ./example-package.nix ]" --arg tools "ps: [ ps.hasktags ]" -A shell # May need some overrides!
 
 let
   namesToNixPathAttrs = import ./nix-utils/namesToNixPathAttrs.nix;
@@ -73,11 +77,9 @@ let
     pkgs.stdenv.lib.lists.subtractLists
       target-names # all target packages subtracted
       ( pkgs.lib.concatMap (getHaskellDeps gatherDepsAll ps) target-paths
-        ++ [ # standard shell tools
-             ghcid fast-tags hlint
-           ]
-        ++ [ # possible extras packages (for testing in ghci)
-           ]
+        ++ tools ps
+        # ++ [ # possible extras packages (for testing in ghci)
+        #    ]
       )
     );
 
@@ -103,8 +105,6 @@ in
     # TAGS
     haskell-sources = extractHaskellSources pkgs package-srcs;
     # SHELLS
-    shell-simple = example-package.env;
-    # shell-simple-bench = (pkgs.haskell.lib.doBenchmark turtle).env;
     shell = pkgs.stdenv.mkDerivation {
       name = "haskell-nix-env";
       buildInputs = [ ghcWithDeps ];
@@ -115,8 +115,11 @@ in
  eval $(egrep ^export ${ghcWithDeps}/bin/ghc)
  echo ${ghcWithDeps}
 '';};
+    shell-simple-first = (builtins.head target-names).env;
+    shell-simple-first-bench =
+      (pkgs.haskell.lib.doBenchmark (builtins.head target-names)).env;
     # Example test shell for the incremental development of the dependency overrides (compatibilitiy testing). No target packages
-    shell-test-example = ghcWithPackages (ps: with ps; [
-      semigroupoids criterion monad-par
-    ]);
+    # shell-test-example = ghcWithPackages (ps: with ps; [
+    #   semigroupoids criterion monad-par
+    # ]);
   }

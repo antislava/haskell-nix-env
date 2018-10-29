@@ -3,6 +3,13 @@
 :set -Werror=incomplete-patterns
 :set -Wall
 
+:set -Wtyped-holes
+
+:set -ddump-deriv
+:set -dsupress-uniques
+:set -dsupress-module-prefixes
+:set -ddump-splices
+
 :set -XCPP
 :set -XDataKinds
 :set -XDeriveDataTypeable
