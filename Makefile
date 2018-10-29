@@ -3,7 +3,7 @@ FAST_TAGS_VER := $(shell fast-tags --version 2>/dev/null)
 DIR = .
 NIX-DIR = ./nix
 NIXPKGS = $(NIX-DIR)/nixpkgs.git.json
-
+TARGETS = "[./example-package.nix]"
 
 # DEFAULT
 .PHONY : default
@@ -35,7 +35,7 @@ shell84 : nix-shell-check
 ifndef NIX_GHC
 	@touch nix-shell-check
 	ln -sf `ghc-pkg list | head -1 | xargs` .
-	nix-shell default-flex.nix -A shell --argstr compiler ghc843 --command "ghc-pkg list | head -1 | xargs | xargs -I {} ln -sf {} . ; ls -1 package.conf.d | sort > package.conf.d.ghc843.txt; return"
+	nix-shell project.nix -A shell --arg targets $(TARGETS) --argstr compiler ghc843 --command "ghc-pkg list | head -1 | xargs | xargs -I {} ln -sf {} . ; ls -1 package.conf.d | sort > package.conf.d.ghc843.txt; return"
 else
 	$(error Already in GHC shell!)
 endif
@@ -44,14 +44,14 @@ endif
 shell86 : nix-shell-check
 ifndef NIX_GHC
 	@touch nix-shell-check
-	nix-shell default-flex.nix -A shell --argstr compiler ghc861 --command "ghc-pkg list | head -1 | xargs | xargs -I {} ln -sf {} . ; ls -1 package.conf.d | sort > package.conf.d.ghc861.txt; return"
+	nix-shell project.nix -A shell --arg targets $(TARGETS) --argstr compiler ghc861 --command "ghc-pkg list | head -1 | xargs | xargs -I {} ln -sf {} . ; ls -1 package.conf.d | sort > package.conf.d.ghc861.txt; return"
 else
 	$(error Already in GHC shell!)
 endif
 
 # .PHONY : nix-shell-check
-# nix-shell-check : default-flex.nix $(PKG-NIX) nix/* hask-deps/*
-nix-shell-check : default-flex.nix nix/* hask-deps/*
+# nix-shell-check : project.nix $(PKG-NIX) nix/* hask-deps/*
+nix-shell-check : project.nix nix/* hask-deps/*
 	@echo "Some nix shell dependencies changed!"
 
 
@@ -80,7 +80,7 @@ endif
 
 haskdeps :
 ifdef NIX_GHC
-	nix-build default-flex.nix -A haskell-sources --argstr compiler $(GHC_VER) -o haskdeps
+	nix-build project.nix -A haskell-sources --argstr compiler $(GHC_VER) --arg targets $(TARGETS) -o haskdeps
 else
 	$(error Not in GHC shell!)
 endif

@@ -33,7 +33,11 @@ contravariant-1.5-FpGwhn5fmC2IfBjNJ4PaUQ.conf
 cookie-0.4.4-IK0pwMFz9bD8JTry2bUzvp.conf
 cpphs-1.20.8-10BfCIKtn704hLEcoISbGC.conf
 cryptonite-0.25-CJG2mlBNu5r9icnVbtWGXy.conf
+data-default-0.7.1.1-LTjBtjLvKGK2UBTHiM9KVF.conf
 data-default-class-0.1.2.0-FeIQ5tLoVZBHMSgrT9zptQ.conf
+data-default-instances-containers-0.0.1-9yvw8HF06tiAXuxm5U8KjO.conf
+data-default-instances-dlist-0.0.1-LIRSqaQLAnD9zvxNpqPc5w.conf
+data-default-instances-old-locale-0.0.1-GRzcBvmea5LLGj3CNDMpIw.conf
 deepseq-1.4.4.0.conf
 directory-1.3.3.0.conf
 discrimination-0.3-COnyEQGMTom42BIsPzKwvs.conf
@@ -61,11 +65,15 @@ ghc-prim-0.5.3.conf
 Glob-0.9.3-Ii75OivdSwmIaYxoNsUr0q.conf
 hashable-1.2.7.0-6lccHvu8EMCEDoWPC9YvJi.conf
 haskeline-0.7.4.3.conf
+haskell-src-exts-1.20.3-HNMLB3GgsF7I1BH2g0YWHz.conf
+haskell-src-exts-util-0.2.3-7sPdkcZC4Wr3vplOdWi05S.conf
 hinotify-0.3.10-Ia6lNDc56bXDDg8Wq3EN7I.conf
+hlint-2.1.10-CAmADvjO12aBIDaQhCIb3w.conf
 hostname-1.0-96RwzZJKf0mHYnt0kjXkqR.conf
 hourglass-0.2.12-KOYDioOwsbN8RbyjBFQY7W.conf
 hpack-0.31.0-9rZaQdkWoDbJonkaBZ7ajV.conf
 hpc-0.6.0.3.conf
+hscolour-1.24.4-BEI90NJLSwF5tw227AM1ae.conf
 http-client-0.5.13.1-6OhewF2wOnRACvfoNWrBA9.conf
 http-client-tls-0.3.5.3-8xGcb3VRGwfGxxxQsIpL2W.conf
 http-types-0.12.2-98aaQ7S1Su0Hn6JQ1Ke6qz.conf
@@ -119,6 +127,7 @@ profunctors-5.2.2-KasGpEyJRPx1OkSW2Wo8RI.conf
 promises-0.3-HA0IL6noLYfFAx8yZ7xG1l.conf
 random-1.1-3ypV4EIycgb35PKjTYYr5q.conf
 readable-0.3.1-7I5EIROpRuwBi3cHo2WBVY.conf
+refact-0.3.0.2-1sV84vP3OHo15p4d2xAoYA.conf
 resourcet-1.2.2-IYlnYHNDiWKAt8yiAksMf6.conf
 rts.conf
 safe-0.3.17-LlBPZS3eBmE1gTP4LZmVPq.conf
@@ -157,6 +166,7 @@ transformers-0.5.5.0.conf
 transformers-base-0.4.5.2-6v6f7Mt6QUQ7QEwEAzafmP.conf
 transformers-compat-0.6.2-JV1ddSnlm3mL2xw4J4K8Kw.conf
 turtle-1.5.12-4GrXC45gCUjJaRC5KyHTbs.conf
+uniplate-1.6.12-CIYddM1PkPW8iyKSd2Tn9x.conf
 unix-2.7.2.2.conf
 unix-compat-0.5.1-7L4ZE9qc5MBJa5Jne6W69O.conf
 unliftio-core-0.1.2.0-6l4GP0ylCTM6crlVTDgRiK.conf
