@@ -40,6 +40,7 @@ let
           "${compiler}" = pkgs.haskell.packages."${compiler}".override {
             overrides = pkgs.lib.composeExtensions
               target-overr
+              # (import ./haskell-dep-overrides-example.nix nixpkgs compiler pkgs);
               (import ./haskell-dep-overrides.nix nixpkgs compiler pkgs);
           };
         };
@@ -49,7 +50,8 @@ let
 
   pkgs = import nixpkgs { inherit config; };
 
-  getHaskellDeps = queryHaskellPackage pkgs;
+  # getHaskellDeps = queryHaskellPackage pkgs;
+  getHaskellDeps = queryHaskellPackage pkgs.stdenv;
 
   gatherDepsAll = # Deps for nix shell
     { buildDepends ? []
