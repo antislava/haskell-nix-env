@@ -4,22 +4,11 @@
 , tools      ? ps: [ ps.ghcid ps.fast-tags ps.hlint ]
 }:
 # USAGE:
-# nix-shell project.nix --arg targets "[ ./example-package.nix ]" --argstr compiler ghc843 -A shell
+# nix-shell project.nix --arg targets "[ ./example-package.nix ]" --argstr compiler ghc844 -A shell
 # nix-shell project.nix --arg targets [ ] --arg withHoogle false -A shell
 # nix-shell project.nix --arg targets "[ ./example-package.nix ]" --arg tools "ps: [ ps.hasktags ]" -A shell # May need some overrides!
 
-let
-  namesToNixPathAttrs = import ./nix-utils/namesToNixPathAttrs.nix;
-  utils = builtins.mapAttrs (name: import)
-  (namesToNixPathAttrs ./nix-utils [
-    "fetchNixpkgs"
-    "pathAttrsToHaskellOver"
-    "nixPathsToAttrs"
-    "queryHaskellPackage"
-    "doUnpackSource"
-    "extractHaskellSources"
-  ]);
-in with utils;
+with (import ./nix-utils);
 let
   # NIXPKGS
   nixpkgs-git = builtins.fromJSON (builtins.readFile ./nix/nixpkgs.git.json);

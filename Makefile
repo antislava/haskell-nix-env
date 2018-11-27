@@ -1,15 +1,77 @@
 FAST_TAGS_VER := $(shell fast-tags --version 2>/dev/null)
 
+GIT_CACHE   = /r-cache/git
+
 DIR = .
-NIX-DIR = ./nix
-NIXPKGS = $(NIX-DIR)/nixpkgs.git.json
+NIX_DEPS    = $(DIR)/nix-deps
+NIX_DIR     = $(DIR)/nix
+
+NIXPKGS_SRC = /github.com/NixOS/nixpkgs
+NIXPKGS_JSN = $(NIX_DIR)/nixpkgs.git.json
+# NIXPKGS_NIX = $(NIX_DIR)/nixpkgs.nix
+
+# DIR = .
+# NIX-DIR = ./nix
+# NIXPKGS = $(NIX-DIR)/nixpkgs.git.json
+
+HDEPS       = $(DIR)/.haskdeps
+# HDEPS_ALL   = $(HDEPS)/all
+# HDEPS_GHC   = $(HDEPS)/ghc
+# HDEPS_GHCJS = $(HDEPS)/ghcjs
+HDEPS_CORE  = $(HDEPS)/core
+
 # TARGETS = "[ ./example-package.nix ]"
+# TODO: swaitch to the functional target list
+# TARGETS = "ps: [ ]"
 TARGETS = "[ ]"
 
-# DEFAULT
+
+# DIR STRUCTURE INITIALISATION (ON MAKE PARSE)
+# https://stackoverflow.com/questions/1950926/create-directories-using-make-file
+DIRS = $(NIX_DIR) $(NIX_DEPS) $(HDEPS) $(HDEPS_ALL) $(HDEPS_CORE)
+
+$(info $(shell mkdir -p $(DIRS)))
+
+# https://stackoverflow.com/a/1951111
+dir_guard = @mkdir -p $(@D) # currently not used but potentially useful
+
+
+# DEFAULT make action
 .PHONY : default
 default:
-	@echo "No default action. Use specific make flags instead!"
+	@echo "No default action - use specific make flags instead. (Directories initialised.)"
+
+
+# NIX
+
+git-init :
+	git init
+	git submodule add https://github.com/antislava/nix-utils
+
+# Import expressions for key nix packages (based on git json files)
+# make nix/nixpkgs.nix -B
+# make nix/reflex-platform.nix -B
+$(NIX_DIR)/%.nix : $(NIX_DIR)/%.git.json
+	echo -e "with builtins.fromJSON (builtins.readFile ./$(<F));\nbuiltins.fetchGit { inherit url rev; }" > $@
+
+# make -B nix/obelisk.git.json to force update
+$(NIXPKGS_JSN) :
+	# Switch between the original nixpkgs at github or a local mirror:
+	# nix-prefetch-git https:/$(NIXPKGS_SRC) > $(NIXPKGS)
+	cd $(GIT_CACHE)$(NIXPKGS_SRC) && git fetch
+	nix-prefetch-git $(GIT_CACHE)$(NIXPKGS_SRC) > $(NIXPKGS_JSN)
+
+
+# IMPORT EXPRESSIONS FOR DEPENDENT (HASKELL) PACKAGES
+
+# Example (autocompletion doesn't work unfortunately):
+# make ./nix-deps/groundhog-ghcjs.nix
+$(NIX_DEPS)/%.nix : $(NIX_DEPS)/%.sh
+	sh $< > $@
+
+# %.nix : %.sh
+# 	sh $< > $@
+
 
 
 # CABAL, HPACK, ...
